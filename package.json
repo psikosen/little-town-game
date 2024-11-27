@@ -1,0 +1,15 @@
+{
+  "name": "little-town-game",
+  "version": "1.0.0",
+  "description": "A top-down Phaser game with procedural town generation",
+  "main": "src/game.js",
+  "scripts": {
+    "start": "http-server"
+  },
+  "dependencies": {
+    "phaser": "^3.55.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
