@@ -5,17 +5,16 @@ export class BootScene extends Phaser.Scene {
 
     preload() {
         // Load character sprites
-        this.load.spritesheet('player', 'assets/characters/player/female_character.png', {
-            frameWidth: 32,
-            frameHeight: 32,
-            spacing: 0,
-            margin: 0
+        this.load.spritesheet('character', 'assets/ASEPRITE/UNARMED_IDLE.png', {
+            frameWidth: 48,  // Adjust based on actual sprite size
+            frameHeight: 48  // Adjust based on actual sprite size
         });
 
-        // Load tile sprites
-        this.load.image('grass_tile', 'assets/tiles/town/grass.png');
-        this.load.image('path_tile', 'assets/tiles/town/path.png');
-        
+        this.load.spritesheet('character_run', 'assets/ASEPRITE/UNARMED_RUN.png', {
+            frameWidth: 48,  // Adjust based on actual sprite size
+            frameHeight: 48  // Adjust based on actual sprite size
+        });
+
         // Add loading progress bar
         const progressBar = this.add.graphics();
         const progressBox = this.add.graphics();
@@ -35,7 +34,6 @@ export class BootScene extends Phaser.Scene {
         });
         loadingText.setOrigin(0.5, 0.5);
         
-        // Loading progress events
         this.load.on('progress', function (value) {
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
