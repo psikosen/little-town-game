@@ -3,7 +3,7 @@ export class MainScene extends Phaser.Scene {
         super({ key: 'MainScene' });
         this.player = null;
         this.map = null;
-        this.tileSize = 32; // Size of each tile
+        this.tileSize = 32;
     }
 
     create() {
@@ -25,7 +25,6 @@ export class MainScene extends Phaser.Scene {
     }
 
     createTileDefinitions() {
-        // Define your tiles and their constraints
         return [
             {
                 id: 'grass',
@@ -47,18 +46,15 @@ export class MainScene extends Phaser.Scene {
                     left: ['path', 'grass']
                 }
             }
-            // Add more tile definitions as needed
         ];
     }
 
     createMap(generatedMap) {
-        // Create a container for all map tiles
         this.map = this.add.container(0, 0);
 
-        // Render each tile
         for (let y = 0; y < generatedMap.length; y++) {
             for (let x = 0; x < generatedMap[y].length; x++) {
-                const tile = generatedMap[y][x][0]; // Get the collapsed tile
+                const tile = generatedMap[y][x][0];
                 const sprite = this.add.sprite(
                     x * this.tileSize,
                     y * this.tileSize,
@@ -71,19 +67,13 @@ export class MainScene extends Phaser.Scene {
     }
 
     createPlayer() {
-        // Create player sprite
         this.player = this.add.sprite(400, 300, 'player');
         this.physics.add.existing(this.player);
-        
-        // Set up player physics
         this.player.body.setCollideWorldBounds(true);
-        
-        // Create animations
         this.createPlayerAnimations();
     }
 
     createPlayerAnimations() {
-        // Create animations for each direction
         this.anims.create({
             key: 'walk_down',
             frames: this.anims.generateFrameNumbers('player', { frames: [0, 1, 2, 3] }),
@@ -112,7 +102,6 @@ export class MainScene extends Phaser.Scene {
             repeat: -1
         });
 
-        // Idle animations
         this.anims.create({
             key: 'idle_down',
             frames: [{ key: 'player', frame: 0 }],
@@ -176,7 +165,7 @@ export class MainScene extends Phaser.Scene {
             moving = true;
         }
 
-        // If not moving, play idle animation based on last direction
+        // If not moving, play idle animation
         if (!moving) {
             const currentAnim = this.player.anims.currentAnim;
             if (currentAnim) {
@@ -185,7 +174,7 @@ export class MainScene extends Phaser.Scene {
             }
         }
 
-        // Normalize and scale the velocity so that player can't move faster diagonally
+        // Normalize and scale the velocity
         this.player.body.velocity.normalize().scale(speed);
     }
 }

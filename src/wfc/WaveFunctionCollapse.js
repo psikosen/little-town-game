@@ -62,7 +62,49 @@ export class WaveFunctionCollapse {
     }
 
     propagate({x, y}) {
-        // To be implemented with the actual tile constraints
-        // This will contain the logic for propagating constraints to neighbors
+        const stack = [{x, y}];
+
+        while (stack.length > 0) {
+            const current = stack.pop();
+            const currentTile = this.grid[current.y][current.x][0];
+
+            // Check all neighbors
+            const neighbors = this.getNeighbors(current.x, current.y);
+            
+            for (const [dir, neighbor] of Object.entries(neighbors)) {
+                if (!neighbor) continue;
+
+                const options = this.grid[neighbor.y][neighbor.x];
+                const validOptions = options.filter(option => 
+                    this.tilesCompatible(currentTile, option, dir)
+                );
+
+                if (validOptions.length < options.length) {
+                    this.grid[neighbor.y][neighbor.x] = validOptions;
+                    stack.push(neighbor);
+                }
+            }
+        }
+    }
+
+    getNeighbors(x, y) {
+        return {
+            top: y > 0 ? {x, y: y - 1} : null,
+            right: x < this.width - 1 ? {x: x + 1, y} : null,
+            bottom: y < this.height - 1 ? {x, y: y + 1} : null,
+            left: x > 0 ? {x: x - 1, y} : null
+        };
+    }
+
+    tilesCompatible(tile1, tile2, direction) {
+        const oppositeDir = {
+            top: 'bottom',
+            right: 'left',
+            bottom: 'top',
+            left: 'right'
+        };
+
+        return tile1.constraints[direction].includes(tile2.id) &&
+               tile2.constraints[oppositeDir[direction]].includes(tile1.id);
     }
 }
