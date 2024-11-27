@@ -6,6 +6,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     create() {
+        console.log('Creating main scene...');
         // Create player
         this.createPlayer();
         
@@ -15,73 +16,43 @@ export class MainScene extends Phaser.Scene {
     }
 
     createPlayer() {
+        console.log('Creating player sprite...');
         this.player = this.add.sprite(400, 300, 'character');
         this.physics.add.existing(this.player);
         this.player.body.setCollideWorldBounds(true);
         this.createPlayerAnimations();
+        
+        // Set default animation
+        this.player.anims.play('idle_down');
     }
 
     createPlayerAnimations() {
-        // Idle animations for all directions
+        console.log('Setting up animations...');
+        
+        // Idle animations - just using single frame for now
         this.anims.create({
             key: 'idle_down',
-            frames: this.anims.generateFrameNumbers('character', { frames: [0, 1, 2, 3, 4, 5] }),
-            frameRate: 8,
-            repeat: -1
+            frames: [{ key: 'character', frame: 0 }],
+            frameRate: 1
         });
 
         this.anims.create({
             key: 'idle_up',
-            frames: this.anims.generateFrameNumbers('character', { frames: [6, 7, 8, 9, 10, 11] }),
-            frameRate: 8,
-            repeat: -1
+            frames: [{ key: 'character', frame: 1 }],
+            frameRate: 1
         });
 
         this.anims.create({
             key: 'idle_left',
-            frames: this.anims.generateFrameNumbers('character', { frames: [12, 13, 14, 15, 16, 17] }),
-            frameRate: 8,
-            repeat: -1
+            frames: [{ key: 'character', frame: 2 }],
+            frameRate: 1
         });
 
         this.anims.create({
             key: 'idle_right',
-            frames: this.anims.generateFrameNumbers('character', { frames: [18, 19, 20, 21, 22, 23] }),
-            frameRate: 8,
-            repeat: -1
+            frames: [{ key: 'character', frame: 3 }],
+            frameRate: 1
         });
-
-        // Running animations
-        this.anims.create({
-            key: 'run_down',
-            frames: this.anims.generateFrameNumbers('character_run', { frames: [0, 1, 2, 3, 4, 5] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'run_up',
-            frames: this.anims.generateFrameNumbers('character_run', { frames: [6, 7, 8, 9, 10, 11] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'run_left',
-            frames: this.anims.generateFrameNumbers('character_run', { frames: [12, 13, 14, 15, 16, 17] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'run_right',
-            frames: this.anims.generateFrameNumbers('character_run', { frames: [18, 19, 20, 21, 22, 23] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        // Set initial animation
-        this.player.anims.play('idle_down', true);
     }
 
     update() {
@@ -103,32 +74,23 @@ export class MainScene extends Phaser.Scene {
         // Horizontal movement
         if (cursors.left.isDown) {
             this.player.body.setVelocityX(-speed);
-            this.player.anims.play('run_left', true);
+            this.player.anims.play('idle_left', true);
             moving = true;
         } else if (cursors.right.isDown) {
             this.player.body.setVelocityX(speed);
-            this.player.anims.play('run_right', true);
+            this.player.anims.play('idle_right', true);
             moving = true;
         }
 
         // Vertical movement
         if (cursors.up.isDown) {
             this.player.body.setVelocityY(-speed);
-            if (!moving) this.player.anims.play('run_up', true);
+            if (!moving) this.player.anims.play('idle_up', true);
             moving = true;
         } else if (cursors.down.isDown) {
             this.player.body.setVelocityY(speed);
-            if (!moving) this.player.anims.play('run_down', true);
+            if (!moving) this.player.anims.play('idle_down', true);
             moving = true;
-        }
-
-        // If not moving, play idle animation based on last direction
-        if (!moving) {
-            const currentAnim = this.player.anims.currentAnim;
-            if (currentAnim) {
-                const direction = currentAnim.key.split('_')[1];
-                this.player.anims.play(`idle_${direction}`, true);
-            }
         }
 
         // Normalize and scale the velocity

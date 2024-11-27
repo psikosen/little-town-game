@@ -4,15 +4,16 @@ export class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // Load character sprites
-        this.load.spritesheet('character', 'assets/ASEPRITE/UNARMED_IDLE.png', {
-            frameWidth: 48,  // Adjust based on actual sprite size
-            frameHeight: 48  // Adjust based on actual sprite size
+        // Load character sprites with debug logging
+        console.log('Loading sprites...');
+        
+        this.load.spritesheet('character', '/assets/ASEPRITE/Character_001.png', {
+            frameWidth: 48,
+            frameHeight: 48
         });
 
-        this.load.spritesheet('character_run', 'assets/ASEPRITE/UNARMED_RUN.png', {
-            frameWidth: 48,  // Adjust based on actual sprite size
-            frameHeight: 48  // Adjust based on actual sprite size
+        this.load.on('filecomplete', (key) => {
+            console.log('Loaded:', key);
         });
 
         // Add loading progress bar
@@ -35,12 +36,14 @@ export class BootScene extends Phaser.Scene {
         loadingText.setOrigin(0.5, 0.5);
         
         this.load.on('progress', function (value) {
+            console.log('Loading progress:', value);
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(250, 280, 300 * value, 30);
         });
         
         this.load.on('complete', () => {
+            console.log('Loading complete!');
             progressBar.destroy();
             progressBox.destroy();
             loadingText.destroy();
